@@ -1,0 +1,82 @@
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command: ["--save", "300", "1", "--ignore-warnings", "ARM64-COW-BUG"]
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - 6379:6379
+    network_mode: bridge
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    # command: ["--reporting-disabled"]
+    environment:
+      - INFLUXDB_HTTP_FLUX_ENABLED=true
+    ports:
+      - 8086:8086
+      - 3001:3001
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb
+    network_mode: bridge
+    restart: unless-stopped
+    healthcheck:
+      test: "curl -f http://localhost:8086/ping"
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SERVER_HTTP_PORT=3001
+      # Doesn't work on OpenWRT because of no internet access
+      # - GF_INSTALL_PLUGINS=frser-sqlite-datasource
+    # ports:
+    #   - 3001:3001
+    restart: unless-stopped
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/custom:/custom
+    # network_mode: bridge
+    # network_mode: host
+    network_mode: container:influxdb
+    depends_on:
+      influxdb:
+        condition: service_healthy
+  
+  ntopng:
+    # image: ntop/ntopng_arm64.dev:latest
+    image: ntopng:debian
+    build:
+      context: build/ntopng
+      network: host
+    container_name: ntopng
+    command: ["--community", "-i", "eth1", "-i", "br-lan", "-r", "localhost:6379@0"]
+    volumes:
+      - ./ntopng:/var/lib/ntopng
+    environment:
+      - TZ="Asia/Kolkata"
+    # ports:
+    #   - 3000:3000
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_started
+      influxdb:
+        condition: service_healthy
+
+  # nginx:
+  #   image: nginx
+  #   container_name: nginx
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /opt/nginx/static:/usr/share/nginx/html:ro
+  #   network_mode: container:influxdb
+  #   depends_on:
+  #     - influxdb
