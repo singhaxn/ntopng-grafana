@@ -1,7 +1,7 @@
 # ntopng-grafana
-Long term traffic statistics on a Raspberry Pi running OpenWRT , from ntopng, viewed in grafana via influxdb.
+Long term traffic statistics on a Raspberry Pi running OpenWRT, from ntopng, viewed in grafana via influxdb.
 
-While these instructions are specifically for the Raspberry Pi 4 running *OpenWRT 23.05.4*, they may be applicable to other devices and versions. Either way, it is your responsibility to evaluate and accept any risk involved in this process.
+While these instructions are specifically for a Raspberry Pi 4 running *OpenWRT 23.05.4*, they may be applicable to other devices and versions. Either way, it is your responsibility to evaluate and accept any risk involved in this process.
 ## Motivation
 While [OpenWRT](https://openwrt.org/) does provide [several options](https://openwrt.org/docs/guide-user/services/network_monitoring/bwmon) for bandwidth monitoring, the available options focus on devices within the local network. Information regarding external services accessed by local devices is rather limited.
 
@@ -23,12 +23,14 @@ If you only want to use the dashboard, skip to the [Configuration](#configuratio
 - LAN and internet access from the OpenWRT RPi4
 - SSH enabled ***or*** a keyboard and display connected to your RPi4
 - Familiarity with the linux command line, SSH and *docker*
-## Persisting data across reboots
-Trying to run the ntopng container off the f2fs overlay, in the `squashfs` version of OpenWRT, for some reason, results in a `Error response from daemon: invalid argument`. The `docker` package available via `opkg`, stores data at the location `/opt/docker`. Therefore, it makes sense to mount writable storage at `/opt` before installing docker (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
+## Mounting external storage on /opt
+In the `squashfs` version of OpenWRT, for some reason, trying to run the ntopng container off the f2fs overlay, results in a `Error response from daemon: invalid argument` error.
 
-I chose to split the second partition on my SD card into two, formatted the third partition as `ext2` and mounted that partition as `/opt`. This is not the best idea for SD card longevity since InfluxDB will be writing logs frequently. It is up to you to evaluate whether adding a USB HDD or SSD makes sense for your use case.
+The `docker` package available via `opkg`, stores data at the location `/opt/docker`. Therefore, I mounted writable storage at `/opt` _before_ installing docker (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
+
+I chose to split the second partition on my SD card into two, format the third partition as `ext2` and mount that partition as `/opt`. This is not the best idea for SD card longevity since InfluxDB will be writing logs frequently. It is up to you to evaluate whether adding a USB HDD or SSD makes sense for your use case.
 ## Clone this repository
-Connect a keyboard and display to your RPi4 ***or*** log in via SSH and clone this repository
+Connect a keyboard and display to your RPi4 *or* log in via SSH and clone this repository
 ```
 opkg update
 opkg install git git-http
@@ -97,51 +99,57 @@ docker compose pull
 docker compose up -d
 ```
 ## Configuration
-### Dashboard Only
-If you've skipped the _Getting Docker to Work_ section because you only intend to use the dashboard in your setup, make sure you perform the following actions before proceeding:
+### Dashboard only
+If you've skipped the the previous sections because you only want to use the dashboard in your setup, make sure you perform the following actions before proceeding:
 1. Clone this repository
-```
-git clone https://github.com/singhaxn/ntopng-grafana.git
-```
-2. Install the [sqlite plugin](https://grafana.com/grafana/plugins/frser-sqlite-datasource/) in grafana.
+	```
+	git clone https://github.com/singhaxn/ntopng-grafana.git
+	```
+2. Install the [sqlite plugin](https://grafana.com/grafana/plugins/frser-sqlite-datasource/) for grafana.
 3. Mount some directory as `/custom` in your grafana container.
-4. Modify the `update-luts.sh` script to target the directory mounted as `/custom`.
-5. Run `update-luts.sh`
-```
-chmod +x update-luts.sh && ./update-luts.sh
-```
+4. Modify the path following line in `update-luts.sh` to target the directory mounted as `/custom`:
+	```
+	cd "$SRCDIR/grafana/custom"
+	```
+5. Run `update-luts.sh` to create sqlite look-up tables for ASNs an OUIs
+	```
+	chmod +x update-luts.sh
+	./update-luts.sh
+	```
+At this point, it is assumed that you have your `redis`, `influxdb`, `ntopng` and `grafana` containers running and accessible as required. Make sure you adjust the URLs below, to match your setup.
 ### ntopng
-Access the ntopng (version `6.1.240628-23672` at the time of writing) web UI by going to `http://<RPi4_IP_address>:3000` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the ntopng dashboard.
+Access the ntopng web UI (version `6.1.240628-23672` at the time of writing) by going to `http://<RPi4_IP_address>:3000` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the ntopng dashboard.
 
 At this point, let's start exporting flow data to InfluxDB.
 #### Export flows to InfluxDB
 Within the ntopng web interface, navigate to *Settings > Timeseries*. I've made the following changes to collect data for the included Grafana dashboard.
 1. **Timeseries Database**
-	1. ***Timeseries Driver***: `InfluxDB 1.x/2.x`
-	2. ***Timeseries/Stats Data Retention***: `60`
+	1. **Timeseries Driver**: `InfluxDB 1.x/2.x`
+	2. **InfluxDB URL**: `http://localhost:8086`
+	3. **Timeseries/Stats Data Retention**: `60`
 2. **Interfaces Timeseries**
-	1. ***Layer-7 Applications***: `None`
+	1. **Layer-7 Applications**: `None`
 3. **Local Hosts Timeseries** (optional)
 	1. **Host Timeseries**: `Full` - Only if you want to monitor DNS request statistics
 4. **Devices Timeseries**
-	1. ***Traffic***: `On`
+	1. **Traffic**: `On`
 5. **Other Timeseries**
-	1. ***Autonomous Systems***: `On`
-	2. ***Countries***: `On`
+	1. **Autonomous Systems**: `On`
+	2. **Countries**: `On`
 #### Screenshots for reference
 ![ntopng-timeseries_1.png](images/ntopng-timeseries_1.png)
 ![ntopng-timeseries_2.png](images/ntopng-timeseries_2.png)
 
 ### Grafana
 
-Access the grafana (version `11.2.0` at the time of writing) web UI by going to `http://<RPi4_IP_address>:3001` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the grafana home page.
+Access the grafana web UI (version `11.2.0` at the time of writing) by going to `http://<RPi4_IP_address>:3001` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the grafana home page.
 #### Timeseries datasource (InfluxDB)
 1. Navigate to *Connections > Add new connection* and select *InfluxDB*.
 2. Click *Add new datasource*
 3. Change the following properties
 	- **Name**: `ntopng`
 	- **HTTP**
-		- ***URL***: `http://localhost:8086/`
+		- **URL**: `http://localhost:8086/`
 	- **InfluxDB Details**
 		- **Database**: `ntopng`
 			- or whatever you've configured in the ntopng web UI above
