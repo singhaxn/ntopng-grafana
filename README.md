@@ -101,18 +101,20 @@ docker compose up -d
 ## Configuration
 ### Dashboard only
 If you've skipped the the previous sections because you only want to use the dashboard in your setup, make sure you perform the following actions before proceeding:
-1. Clone this repository
+1. Clone this repository.
 	```
 	git clone https://github.com/singhaxn/ntopng-grafana.git
+	cd ntopng-grafana
 	```
 2. Install the [sqlite plugin](https://grafana.com/grafana/plugins/frser-sqlite-datasource/) for grafana.
-3. Mount some directory as `/custom` in your grafana container.
-4. Modify the path following line in `update-luts.sh` to target the directory mounted as `/custom`:
-	```
-	cd "$SRCDIR/grafana/custom"
-	```
+3. Mount some directory as `/custom` in your grafana container. Let's refer to this directory, on the host, as `<grafana_custom>`.
+4. Modify the path on the following line in `scripts/update-luts.sh` to `<grafana_custom>`:
+	| From | To |
+	|-------|------|
+	| `cd "$SRCDIR/grafana/custom"` | `cd "<grafana_custom>"` |
 5. Run `update-luts.sh` to create sqlite look-up tables for ASNs an OUIs
 	```
+	cd <scripts
 	chmod +x update-luts.sh
 	./update-luts.sh
 	```
