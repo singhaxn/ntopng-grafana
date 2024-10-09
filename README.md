@@ -114,7 +114,7 @@ If you've skipped the the previous sections because you only want to use the das
 	| `cd "$SRCDIR/grafana/custom"` | `cd "<grafana_custom>"` |
 5. Run `update-luts.sh` to create sqlite look-up tables for ASNs an OUIs
 	```
-	cd <scripts
+	cd scripts
 	chmod +x update-luts.sh
 	./update-luts.sh
 	```
