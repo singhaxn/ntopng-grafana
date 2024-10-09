@@ -12,7 +12,7 @@ ntopng does support exporting timeseries data to [InfluxDB](https://www.influxda
 ## Grafana Dashboard
 The dashboard definition, by itself, located at `grafana-dashboard/ntopng - Long Term - xxxxxxxxxxxxx.json` in this repository, should be usable on pretty much any hardware/software combination as long as you can get the ntopng - influxdb pipeline running.
 
-If you only want to use the dashboard, skip to the [Configuration](#Configuration) section.
+If you only want to use the dashboard, skip to the [Configuration](#configuration) section.
 ### Screenshots
 
 ![ntopng-overview.png](images/ntopng-overview.png)
@@ -24,7 +24,7 @@ If you only want to use the dashboard, skip to the [Configuration](#Configuratio
 - SSH enabled ***or*** a keyboard and display connected to your RPi4
 - Familiarity with the linux command line, SSH and *docker*
 ## Persisting data across reboots
-The `docker` package available via `opkg`, stores data at the location `/opt/docker`. Since a majority of the filesystem, in the `squashfs` version of OpenWRT, is volatile, it makes sense to mount writable storage at `/opt` (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
+Trying to run the ntopng container off the f2fs overlay, in the `squashfs` version of OpenWRT, for some reason, results in a `Error response from daemon: invalid argument`. The `docker` package available via `opkg`, stores data at the location `/opt/docker`. Therefore, it makes sense to mount writable storage at `/opt` before installing docker (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
 
 I chose to split the second partition on my SD card into two, formatted the third partition as `ext2` and mounted that partition as `/opt`. This is not the best idea for SD card longevity since InfluxDB will be writing logs frequently. It is up to you to evaluate whether adding a USB HDD or SSD makes sense for your use case.
 ## Clone this repository
@@ -97,6 +97,19 @@ docker compose pull
 docker compose up -d
 ```
 ## Configuration
+### Dashboard Only
+If you've skipped the _Getting Docker to Work_ section because you only intend to use the dashboard in your setup, make sure you perform the following actions before proceeding:
+1. Clone this repository
+```
+git clone https://github.com/singhaxn/ntopng-grafana.git
+```
+2. Install the [sqlite plugin](https://grafana.com/grafana/plugins/frser-sqlite-datasource/) in grafana.
+3. Mount some directory as `/custom` in your grafana container.
+4. Modify the `update-luts.sh` script to target the directory mounted as `/custom`.
+5. Run `update-luts.sh`
+```
+chmod +x update-luts.sh && ./update-luts.sh
+```
 ### ntopng
 Access the ntopng (version `6.1.240628-23672` at the time of writing) web UI by going to `http://<RPi4_IP_address>:3000` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the ntopng dashboard.
 
