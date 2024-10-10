@@ -7,7 +7,7 @@ While [OpenWRT](https://openwrt.org/) does provide [several options](https://ope
 
 [ntopng](https://www.ntop.org/guides/ntopng/what_is_ntopng.html) provides some transparency into the goings-on in your network. However, the available data is limited to active flows. Access to historical data is paywalled.
 
-ntopng does support exporting timeseries data to [InfluxDB](https://www.influxdata.com/products/influxdb-overview/), in essence, making it possible to view historical data through a graphing tool such as [Grafana](https://grafana.com/).
+ntopng does support exporting timeseries data to [InfluxDB](https://www.influxdata.com/products/influxdb-overview/), in essence, making it possible to view historical data through a visualization tool such as [Grafana](https://grafana.com/).
 
 ## Grafana Dashboard
 The dashboard definition, by itself, located at `grafana-dashboard/ntopng - Long Term - xxxxxxxxxxxxx.json` in this repository, should be usable on pretty much any hardware/software combination as long as you can get the ntopng - influxdb pipeline running.
@@ -22,11 +22,11 @@ If you only want to use the dashboard, skip to the [Configuration](#configuratio
 - Raspberry Pi 4 (or other **arm64** computer) running OpenWRT (installation instructions [here](https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi))
 - LAN and internet access from the OpenWRT RPi4
 - SSH enabled ***or*** a keyboard and display connected to your RPi4
-- Familiarity with the linux command line, SSH and *docker*
+- Familiarity with the linux command line, SSH and docker
 ## Mounting external storage on /opt
-In the `squashfs` version of OpenWRT, for some reason, trying to run the ntopng container off the f2fs overlay, results in a `Error response from daemon: invalid argument` error.
+On the `squashfs` version of OpenWRT, for some reason, trying to run the ntopng container off the f2fs overlay, results in an `Error response from daemon: invalid argument` error.
 
-The `docker` package available via `opkg`, stores data at the location `/opt/docker`. Therefore, I mounted writable storage at `/opt` _before_ installing docker (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
+The `docker` package available via `opkg`, stores data at the location `/opt/docker`. We can get around the f2fs problem by mounting writable storage at `/opt` _before_ installing docker (ref. [Using storage devices](https://openwrt.org/docs/guide-user/storage/usb-drives)).
 
 I chose to split the second partition on my SD card into two, format the third partition as `ext2` and mount that partition as `/opt`. This is not the best idea for SD card longevity since InfluxDB will be writing logs frequently. It is up to you to evaluate whether adding a USB HDD or SSD makes sense for your use case.
 ## Clone this repository
@@ -81,7 +81,7 @@ cd /opt/ntopng-grafana/scripts
 chmod +x *.sh
 ./install-deps.sh
 ```
-`install-deps.sh` internally calls `update-luts.sh` which pulls ASN and OUI mappings and creates look-up tables in an sqlite3 database.
+`install-deps.sh` internally calls `update-luts.sh` which pulls [autonomous system number (ASN)](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)) and [organizationally unique identifier (OUI)](https://en.wikipedia.org/wiki/Organizationally_unique_identifier) mappings and creates look-up tables in an sqlite3 database.
 ### Build the ntopng image
 *ntop* does provide a [docker image](https://hub.docker.com/r/ntop/ntopng_arm64.dev) for ntopng on arm64 devices. However, for me, pulling this image on an OpenWRT RPi4 fails with the following error:
 ```
@@ -112,13 +112,13 @@ If you've skipped the the previous sections because you only want to use the das
 	| From | To |
 	|-------|------|
 	| `cd "$SRCDIR/grafana/custom"` | `cd "<grafana_custom>"` |
-5. Run `update-luts.sh` to create sqlite look-up tables for ASNs an OUIs
+5. Run `update-luts.sh` to create sqlite look-up tables for [autonomous system numbers (ASN)](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)) and [organizationally unique identifier (OUI)](https://en.wikipedia.org/wiki/Organizationally_unique_identifier).
 	```
 	cd scripts
 	chmod +x update-luts.sh
 	./update-luts.sh
 	```
-At this point, it is assumed that you have your `redis`, `influxdb`, `ntopng` and `grafana` containers running and accessible as required. Make sure you adjust the URLs below, to match your setup.
+At this point, it is assumed that you have your `redis`, `influxdb`, `ntopng` and `grafana` containers running and accessible as required. Make sure you adjust the URLs and port numbers below, to match your setup.
 ### ntopng
 Access the ntopng web UI (version `6.1.240628-23672` at the time of writing) by going to `http://<RPi4_IP_address>:3000` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the ntopng dashboard.
 
