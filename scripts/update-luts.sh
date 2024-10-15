@@ -3,12 +3,12 @@
 cd "$(dirname "$0")/.."
 SRCDIR=$(pwd)
 echo $SRCDIR
+GRAFANA_CUSTOM=$SRCDIR/grafana/custom
 
 {
-	cd "$SRCDIR/grafana/custom"
+	cd "$GRAFANA_CUSTOM"
 	
 	wget "https://raw.githubusercontent.com/sapics/ip-location-db/refs/heads/main/asn/asn-ipv4.csv" -O asn-ipv4.csv
-	# wget "https://raw.githubusercontent.com/sapics/ip-location-db/refs/heads/main/asn/asn-ipv6.csv" -O asn-ipv6.csv
 	wget "https://standards-oui.ieee.org/oui/oui.csv" -O oui.csv
 	
 	sqlite3 lut.sqlite3.new < "$SRCDIR/scripts/import_lut.sql"
