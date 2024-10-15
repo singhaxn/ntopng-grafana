@@ -57,12 +57,6 @@
     },
     {
       "type": "panel",
-      "id": "text",
-      "name": "Text",
-      "version": ""
-    },
-    {
-      "type": "panel",
       "id": "timeseries",
       "name": "Time series",
       "version": ""
@@ -92,37 +86,12 @@
   "links": [],
   "panels": [
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_NTOPNG}"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 3,
-        "w": 17,
-        "x": 0,
-        "y": 0
-      },
-      "id": 25,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "# Long-term ntopng data",
-        "mode": "markdown"
-      },
-      "pluginVersion": "11.2.0",
-      "type": "text"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 3
+        "y": 0
       },
       "id": 22,
       "panels": [],
@@ -197,7 +166,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 4
+        "y": 1
       },
       "id": 23,
       "options": {
@@ -288,7 +257,7 @@
             }
           },
           "mappings": [],
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -296,7 +265,7 @@
         "h": 10,
         "w": 7,
         "x": 10,
-        "y": 4
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -434,7 +403,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -442,7 +411,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 14
+        "y": 11
       },
       "id": 24,
       "options": {
@@ -589,7 +558,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 21
       },
       "id": 5,
       "panels": [],
@@ -656,7 +625,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -664,7 +633,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 25
+        "y": 22
       },
       "id": 16,
       "options": {
@@ -765,7 +734,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": [
           {
@@ -788,7 +757,7 @@
         "h": 10,
         "w": 7,
         "x": 10,
-        "y": 25
+        "y": 22
       },
       "id": 20,
       "options": {
@@ -1013,7 +982,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -1021,7 +990,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 35
+        "y": 32
       },
       "id": 36,
       "options": {
@@ -1123,7 +1092,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": [
           {
@@ -1190,7 +1159,7 @@
         "h": 10,
         "w": 7,
         "x": 10,
-        "y": 35
+        "y": 32
       },
       "id": 35,
       "options": {
@@ -1426,7 +1395,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 42
       },
       "id": 28,
       "panels": [],
@@ -1492,7 +1461,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -1500,7 +1469,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 46
+        "y": 43
       },
       "id": 30,
       "options": {
@@ -1651,7 +1620,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": [
           {
@@ -1700,7 +1669,7 @@
         "h": 10,
         "w": 7,
         "x": 10,
-        "y": 46
+        "y": 43
       },
       "id": 34,
       "options": {
@@ -1911,7 +1880,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 56
+        "y": 53
       },
       "id": 32,
       "panels": [],
@@ -1965,7 +1934,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -1973,7 +1942,7 @@
         "h": 19,
         "w": 10,
         "x": 0,
-        "y": 57
+        "y": 54
       },
       "id": 29,
       "options": {
@@ -2210,7 +2179,7 @@
             }
           },
           "mappings": [],
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": []
       },
@@ -2218,7 +2187,7 @@
         "h": 9,
         "w": 7,
         "x": 10,
-        "y": 57
+        "y": 54
       },
       "id": 26,
       "options": {
@@ -2455,7 +2424,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "mbytes"
         },
         "overrides": [
           {
@@ -2486,7 +2455,7 @@
         "h": 10,
         "w": 7,
         "x": 10,
-        "y": 66
+        "y": 63
       },
       "id": 33,
       "options": {
@@ -2681,7 +2650,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 76
+        "y": 73
       },
       "id": 10,
       "panels": [
@@ -2976,8 +2945,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -3118,9 +3086,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "br-lan",
-          "value": "1"
+          "selected": false,
+          "text": "eno0",
+          "value": "0"
         },
         "hide": 0,
         "includeAll": false,
@@ -3129,17 +3097,12 @@
         "name": "iface_name",
         "options": [
           {
-            "selected": false,
-            "text": "eth1",
-            "value": "0"
-          },
-          {
             "selected": true,
-            "text": "br-lan",
-            "value": "1"
+            "text": "eno0",
+            "value": "0"
           }
         ],
-        "query": "eth1 : 0,br-lan : 1",
+        "query": "eno0 : 0",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"

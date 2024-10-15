@@ -71,10 +71,10 @@ ln -s docker-compose.owrt.yml docker-compose.yml
 ```
 In `docker-compose.yml` under `services > ntopng > command`, make sure, the specified interfaces (`-i`), are the ones you want to monitor. You can add more interfaces if you want, for example:
 ```yaml
-..., "-i", "br-lan", "-i", "eth0", "-i", "eth1",...
+command: [..., "-i", "br-lan", "-i", "eth0", "-i", "eth1",...]
 ```
 The exposed TCP ports are:
-|service|port|comments|
+|service|port|location|
 |-|-|-|
 |`redis`|6379|`services > redis > ports`|
 |`influxdb`|8086|`services > influxdb > ports`|
