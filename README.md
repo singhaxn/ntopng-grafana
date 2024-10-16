@@ -1,5 +1,5 @@
 # ntopng-grafana
-Long term traffic statistics from ntopng, viewed in grafana via influxdb.
+Long term network traffic statistics from ntopng, viewed in grafana via influxdb.
 ## Motivation
 [ntopng](https://www.ntop.org/guides/ntopng/what_is_ntopng.html) provides some transparency into the goings-on in your network. However, the available data is limited to active flows and access to historical data is paywalled. ntopng does support exporting timeseries data to [InfluxDB](https://www.influxdata.com/products/influxdb-overview/), in essence, making it possible to view historical data through a visualization tool such as [Grafana](https://grafana.com/).
 ## Grafana Dashboard
@@ -76,22 +76,23 @@ Please be patient, this may take a little time.
 ### ntopng
 Access the ntopng web UI (version `6.2` at the time of writing) by going to `http://<device_IP_address>:3002` in your browser. The default username/password combination is `admin`/`admin`. Change the password and then you should be redirected to the ntopng dashboard.
 #### Export flows to InfluxDB
-Within the ntopng web interface, navigate to *Settings > Preferences > Timeseries*. Make the following changes to collect data for the included Grafana dashboard.
-1. **Timeseries Database**
-	1. **Timeseries Driver**: `InfluxDB 1.x/2.x`
-	2. **InfluxDB URL**: `http://localhost:8086`
-	3. **Timeseries/Stats Data Retention** (optional): `60`
-2. **Interfaces Timeseries**
-	1. **Layer-7 Applications**: `None`
-3. **Local Hosts Timeseries**
-	1. **Host Timeseries** (one of):
-		- `Light` - default
-		- `Full` - only if you want to monitor DNS request statistics
-4. **Devices Timeseries**
-	1. **Traffic**: `On`
-5. **Other Timeseries**
-	1. **Autonomous Systems**: `On`
-	2. **Countries**: `On`
+1. Within the ntopng web interface, navigate to *Settings > Preferences > Timeseries*. Make the following changes to collect data for the included Grafana dashboard.
+	1. **Timeseries Database**
+		1. **Timeseries Driver**: `InfluxDB 1.x/2.x`
+		2. **InfluxDB URL**: `http://localhost:8086`
+		3. **Timeseries/Stats Data Retention** (optional): `60`
+	2. **Interfaces Timeseries**
+		1. **Layer-7 Applications**: `None`
+	3. **Local Hosts Timeseries**
+		1. **Host Timeseries** (one of):
+			- `Light` - default
+			- `Full` - only if you want to monitor DNS request statistics
+	4. **Devices Timeseries**
+		1. **Traffic**: `On`
+	5. **Other Timeseries**
+		1. **Autonomous Systems**: `On`
+		2. **Countries**: `On`
+2. Click *Save*
 #### Screenshots for reference
 ![ntopng-timeseries_1.png](images/ntopng-timeseries_1.png)
 ![ntopng-timeseries_2.png](images/ntopng-timeseries_2.png)
@@ -143,8 +144,6 @@ Access the grafana web UI (version `11.2.0` at the time of writing) by going to 
 
 <!--	Since the order in which ntopng exports interfaces is not defined, it may take some trial and error to figure out which numeric ID corresponds to which interface. -->
 5. Verify that the *Preview of values* section only shows the interface names.
-
-<!--	![ntopng-grafana_var2.png](images/ntopng-grafana_var2.png) -->
 6. Click *Apply* and then *Save Dashboard*
 
 You should now have a functional Grafana dashboard for long-term ntopng data.

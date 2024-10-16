@@ -5,16 +5,7 @@ While [OpenWRT](https://openwrt.org/) does provide [several options](https://ope
 
 The configuration described here, has only been tested on OpenWRT running on a Raspberry Pi 4. It may, however, be usable on other `arm64` devices too.
 
-If you're targeting OpenWRT on an `amd64` device, specifying the correct package [for your platform](https://packages.ntop.org/), in `build/ntopng/setup/install.sh` may do the trick:
-
-change
-```bash
-PACKAGE=https://packages.ntop.org/RaspberryPI/apt-ntop.deb
-```
-to
-```bash
-PACKAGE=https://packages.ntop.org/apt-stable/bullseye/all/apt-ntop-stable.deb
-```
+OpenWRT on `x86_64` devices, is untested. However, it is expected to work OOTB, since the mechanism for choosing the correct package [for your platform](https://packages.ntop.org/), is in place in `build/ntopng/setup/install.sh`. Please report any issues you may encounter, along with your solution for the same, in the [Issues](https://github.com/singhaxn/ntopng-grafana/issues) section of this repository.
 
 ## Disclaimer
 If you choose to use this repository, it is your responsibility to evaluate and accept any risk involved.
@@ -92,10 +83,13 @@ So, let us build an image instead:
 cd /opt/ntopng-grafana
 docker compose build --progress=plain ntopng
 ```
+Please be patient, this may take a little time.
 ### Start the ntopng stack
 ```bash
 docker compose pull
 docker compose up -d
 ```
+The `pull access denied for ntopng` error can be safely ignored, since we've built the image ourselves.
+
 Please be patient, this may take a little time.
 ### Return to the [Configuration](README.md#configuration) section.
