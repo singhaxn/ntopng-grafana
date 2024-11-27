@@ -5,7 +5,7 @@ While [OpenWRT](https://openwrt.org/) does provide [several options](https://ope
 
 The configuration described here, has only been tested on OpenWRT running on a Raspberry Pi 4. It may, however, be usable on other `arm64` devices too.
 
-OpenWRT on `x86_64` devices, is untested. However, it is expected to work OOTB, since the mechanism for choosing the correct package [for your platform](https://packages.ntop.org/), is in place in `build/ntopng/setup/install.sh`. Please report any issues you may encounter, along with your solution for the same, in the [Issues](https://github.com/singhaxn/ntopng-grafana/issues) section of this repository.
+This setup hasn't been tested on OpenWRT on `x86_64` devices. However, it is expected to work OOTB, since the mechanism for choosing the correct package [for your platform](https://packages.ntop.org/), is in place in `build/ntopng/setup/install.sh`. Please report any issues you may encounter, along with your solution for the same, in the [Issues](https://github.com/singhaxn/ntopng-grafana/issues) section of this repository.
 
 ## Disclaimer
 If you choose to use this repository, it is your responsibility to evaluate and accept any risk involved.

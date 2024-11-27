@@ -4,7 +4,6 @@ Long term network traffic statistics from ntopng, viewed in grafana via influxdb
 [ntopng](https://www.ntop.org/guides/ntopng/what_is_ntopng.html) provides some transparency into the goings-on in your network. However, the available data is limited to active flows and access to historical data is paywalled. ntopng does support exporting timeseries data to [InfluxDB](https://www.influxdata.com/products/influxdb-overview/), in essence, making it possible to view historical data through a visualization tool such as [Grafana](https://grafana.com/).
 ## Grafana Dashboard
 ### Screenshots
-![ntopng-filters.png](images/ntopng-filters.png)
 ![ntopng-overview.png](images/ntopng-overview.png)
 ![ntopng-LAN_traffic.png](images/ntopng-LAN_traffic.png)
 ![ntopng-external.png](images/ntopng-external.png)
@@ -27,7 +26,7 @@ Log in to the target device via SSH *or* connect a keyboard and display and clon
 ```bash
 git clone https://github.com/singhaxn/ntopng-grafana.git
 ```
-Henceforth, let's refer to the repository directory as `<ntopng-grafana>`
+Henceforth, let's refer to the repository directory as `<ntopng-grafana>`. Please substitute it with the actual path, where ever it is used.
 ## Start services
 ### Install dependencies
 ```bash
@@ -66,7 +65,7 @@ The exposed TCP ports are:
 Please choose unused TCP ports, as appropriate for your environment, and substitute accordingly, in the configuration instructions.
 
 ### Start the ntopng stack
-In the repository base folder (`ntopng-grafana`), run:
+In the repository base folder (`<ntopng-grafana>`), run:
 ```bash
 docker compose pull
 docker compose up -d
